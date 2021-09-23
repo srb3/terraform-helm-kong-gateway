@@ -6,7 +6,7 @@ A terraform module for kong gateway via helm
 
 ### Using module defaults
 
-Complete example in the examples directory
+A more complete example in the examples directory
 
 ```HCL
 module "kong_cp" {
