@@ -42,6 +42,6 @@ test_deployment_default:
 	$(DOCKERBUILD); \
 	echo "Running basic test in $(IMAGEREPO):latest: inspec exec default/ -t k8s://"; \
 	$(INSPECRUN_BASIC); \
-	echo "Running kong test in $(IMAGEREPO):latest: inspec exec kong/"; \
+	echo "Running kong api test in $(IMAGEREPO):latest: inspec exec kong/"; \
 	$(INSPECRUN_KONG); \
 	popd
