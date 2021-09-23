@@ -1,0 +1,86 @@
+image:
+  repository: ${image_repo}
+  tag: ${image_version}
+  pullPolicy: IfNotPresent
+
+env:
+  prefix: /kong_prefix/
+  database: "off"
+  role: data_plane
+  cluster_control_plane: ${cluster_control_plane}
+  cluster_telemetry_endpoint: ${cluster_telemetry_endpoint}
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
+  %{ for k,v in certs }
+  ${v.yaml_crt}: /etc/secrets/${k}/tls.crt
+  ${v.yaml_key}: /etc/secrets/${k}/tls.key
+  %{ endfor }
+  log_level: debug
+  headers: "off"
+  audit_log: "on"
+  ssl_cipher_suite: "intermediate"
+  trusted_ips: "0.0.0.0/0,::0"
+  real_ip_header: "X-Forward-For"
+  anonymous_reports: "off"
+  untrusted_lua: "off"
+
+%{ if length(certs) > 0 }
+secretVolumes:
+%{ for k,_v in certs }
+  - ${k}
+%{ endfor }
+%{ else }
+secretVolumes: []
+%{ endif }
+
+
+proxy:
+  enabled: true
+  type: LoadBalancer
+  http:
+    enabled: true
+    servicePort: 8000
+    containerPort: 8000
+  tls:
+    enabled: false
+    servicePort: 8443
+    containerPort: 8443
+    parameters:
+      - http2
+
+  ingress:
+    enabled: false
+
+admin:
+  enabled: false
+
+portal:
+  enabled: false
+
+portalapi:
+  enabled: false
+
+manager:
+  enabled: false
+
+status:
+  http:
+    enabled: true
+    containerPort: 8100
+
+ingressController:
+  enabled: false
+
+enterprise:
+  enabled: true
+  license_secret: ${kong_license_secret_name}
+  vitals:
+    enabled: true
+
+%{ if length(labels) > 0 }
+extraLabels: 
+%{ for k,v in labels }
+  ${k}: ${v}
+%{ endfor }
+%{ else }
+extraLabels: {}
+%{ endif }

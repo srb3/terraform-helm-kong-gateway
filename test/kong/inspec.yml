@@ -1,0 +1,8 @@
+name: inspec-kong-gateway
+title: InSpec Kong Gateway Profile
+maintainer: Stephen Brown 
+copyright: Stephen Brown
+copyright_email: stephen.brown@konghq.com
+license: MIT
+summary: Test Kong Gateway API's
+version: 0.1.0

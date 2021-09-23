@@ -1,0 +1,3 @@
+kong_admin_url: ${kong_admin_url}
+kong_proxy_url: ${kong_proxy_url}
+kong_token: ${kong_token}

@@ -1,0 +1,203 @@
+image:
+   repository: ${image_repo}
+   tag: ${image_version}
+   pullPolicy: IfNotPresent
+
+env:
+  database: "postgres"
+  pg_host: ${deployment_name}-postgresql 
+  pg_user: ${kong_database_user}
+  pg_database: ${kong_database_name}
+  pg_password:
+    valueFrom:
+      secretKeyRef:
+        name: ${deployment_name}-postgresql 
+        key: ${kong_database_secret_key}
+  prefix: /usr/local/kong/
+  admin_api_uri: ${scheme}://${admin_hostname}:8001
+  admin_gui_url: ${scheme}://${manager_hostname}:8002
+  portal: off
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
+  lua_ssl_verify_depth: 2
+  log_level: debug
+  role: control_plane
+  %{ for k,v in certs }
+  ${v.yaml_crt}: /etc/secrets/${k}/tls.crt
+  ${v.yaml_key}: /etc/secrets/${k}/tls.key
+  %{ endfor }
+  headers: "off"
+  audit_log: "on"
+  ssl_cipher_suite: "intermediate"
+  kong_trusted_ips: "0.0.0.0/0,::0"
+  real_ip_recursive: "on"
+  real_ip_header: "X-Forward-For"
+  anonymous_reports: "off"
+  untrusted_lua: "off"
+  password:
+    valueFrom:
+      secretKeyRef:
+        name: kong-enterprise-superuser-password
+        key: password
+
+admin:
+  enabled: true
+  type: LoadBalancer
+  externalIPs: []
+  annotations: {}
+
+  http:
+    enabled: true
+    servicePort: 8001
+    containerPort: 8001
+    parameters: []
+
+  tls:
+    enabled: false
+    servicePort: 8444
+    containerPort: 8444
+    parameters:
+      - http2
+
+  ingress:
+    enabled: false
+
+status:
+  http:
+    enabled: true
+    containerPort: 8100
+
+manager:
+  enabled: true
+  type: LoadBalancer
+  externalIPs: []
+  annotations: {}
+
+  http:
+    enabled: true
+    servicePort: 8002
+    containerPort: 8002
+    parameters: []
+
+  tls:
+    enabled: false
+    servicePort: 8445
+    containerPort: 8445
+    parameters:
+      - http2
+
+  ingress:
+    enabled: false
+ 
+portal:
+  enabled: false
+  type: LoadBalancer
+  externalIPs: []
+  annotations: {}
+
+  http:
+    enabled: false
+    servicePort: 8003
+    containerPort: 8003
+    parameters: []
+
+  tls:
+    enabled: false
+    servicePort: 8446
+    containerPort: 8446
+    parameters:
+      - http2
+
+  ingress:
+    enabled: false
+
+portalapi:
+  enabled: false
+  type: LoadBalancer 
+  externalIPs: []
+  annotations: {}
+
+  http:
+    enabled: false
+    servicePort: 8004
+    containerPort: 8004
+    parameters: []
+
+  tls:
+    enabled: false 
+    servicePort: 8447
+    containerPort: 8447
+    parameters:
+      - http2
+
+  ingress:
+    enabled: false
+ 
+cluster:
+  enabled: true
+  type: ClusterIP
+  externalIPs: []
+  annotations: {}
+
+  tls:
+    enabled: true
+    servicePort: 8005
+    containerPort: 8005
+    parameters: []
+
+clustertelemetry:
+  enabled: true
+  type: ClusterIP
+  externalIPs: []
+
+  tls:
+    enabled: true
+    servicePort: 8006
+    containerPort: 8006
+    parameters: []
+
+ingressController:
+  enabled: false
+
+proxy:
+  enabled: false
+
+%{ if length(certs) > 0 }
+secretVolumes:
+%{ for k,_v in certs }
+  - ${k}
+%{ endfor }
+%{ else }
+secretVolumes: []
+%{ endif }
+
+postgresql:
+  enabled: true
+  persistence:
+    enabled: false
+  postgresqlUsername: ${kong_database_user}
+  postgresqlDatabase: ${kong_database_name}
+  existingSecret: ${deployment_name}-postgresql
+  service:
+    port: 5432
+
+enterprise:
+  enabled: true
+  license_secret: ${kong_license_secret_name}
+  vitals:
+    enabled: true
+  portal:
+    enabled: true
+  rbac:
+    enabled: true
+    admin_gui_auth: basic-auth
+    session_conf_secret: ${kong_session_conf_secret_name}
+    admin_gui_auth_conf_secret: ${kong_auth_conf_secret_name}
+
+%{ if length(labels) > 0 }
+extraLabels: 
+%{ for k,v in labels }
+  ${k}: ${v}
+%{ endfor }
+%{ else }
+extraLabels: {}
+%{ endif }
