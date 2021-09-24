@@ -43,6 +43,9 @@ jobs:
       - name: Test
         run: |
           make
+        env:
+          KUBE_DIR=/home/runner
+          MINIKUBE_DIR=/home/runner/work/_temp
       - name: TF Destroy
         run: |
           make clean || true
