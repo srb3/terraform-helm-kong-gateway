@@ -33,14 +33,8 @@ jobs:
           kubectl apply -f test/fixtures/minikube/cm.yaml
       - name: wait
         run: while [[ $(kubectl -n kube-system get pods -l k8s-app=kube-dns -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-      - name: Install deps
-        run: |
-          # mem
-          free -m
-          cat /proc/cpuinfo
-          echo "HOME is ${HOME}"
+          #      - name: Setup tmate session
+          #        uses: mxschmitt/action-tmate@v3
       - name: Write config
         run: |
           cat << EOF > ~/.kong_license

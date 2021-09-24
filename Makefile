@@ -5,8 +5,11 @@ IMAGENAME=inspec-k8s-runner
 IMAGEREPO=srb3/$(IMAGENAME)
 WORKDIR=/share
 
+MINIKUBE_DIR ?= $(HOME)
+
+KUBE_DIR ?= $(HOME)
 DOCKERBUILD=docker build -t $(IMAGEREPO):latest .
-DOCKER_COMMAND=docker run --rm -t -v `pwd`:$(WORKDIR) -v $(HOME)/.kube:/root/.kube:ro -v $(HOME)/.minikube:$(HOME)/.minikube
+DOCKER_COMMAND=docker run --rm -t -v `pwd`:$(WORKDIR) -v $(KUBE_DIR)/.kube:/root/.kube:ro -v $(MINIKUBE_DIR)/.minikube:$(MINIKUBE_DIR)/.minikube
 
 IMAGEPATH=$(IMAGEREPO):latest
 INSPECRUN_BASIC=$(DOCKER_COMMAND) $(IMAGEPATH) exec default/ -t k8s://
@@ -42,6 +45,9 @@ clean_deployment_default:
 
 test_deployment_default:
 	@pushd test; \
+  echo "HOME IS: $(HOME)"; \
+  echo "MINIKUBE_DIR IS: $(MINIKUBE_DIR)"; \
+  echo "KUBE_DIR IS: $(KUBE_DIR)"; \
 	echo "Building $(IMAGEREPO):latest"; \
 	$(DOCKERBUILD); \
 	echo "Running basic test in $(IMAGEREPO):latest: inspec exec default/ -t k8s://"; \
