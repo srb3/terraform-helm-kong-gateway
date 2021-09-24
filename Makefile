@@ -36,7 +36,9 @@ clean_deployment_default:
 	echo "running terraform destroy"; \
 	terraform destroy -auto-approve; \
 	echo "After running destroy"; \
-	popd
+	popd; \
+	pushd test; \
+	if [ -f output.log ];then cat output.log;fi
 
 test_deployment_default:
 	@pushd test; \
