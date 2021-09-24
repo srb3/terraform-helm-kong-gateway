@@ -10,7 +10,9 @@ DOCKER_COMMAND=docker run --rm -it -v `pwd`:$(WORKDIR) -v $(HOME)/.kube:/root/.k
 
 IMAGEPATH=$(IMAGEREPO):latest
 INSPECRUN_BASIC=$(DOCKER_COMMAND) $(IMAGEPATH) exec default/ -t k8s://
-INSPECRUN_KONG=$(DOCKER_COMMAND) $(IMAGEPATH) exec kong/ --input-file /share/attributes.yaml
+INSPECRUN_KONG=$(DOCKER_COMMAND) $(IMAGEPATH) exec kong/ --input-file /$(WORKDIR)/attributes.yaml
+
+# --reporter=json:$(WORKDIR)/output.json
 
 all: build test clean
 
@@ -41,7 +43,10 @@ test_deployment_default:
 	echo "Building $(IMAGEREPO):latest"; \
 	$(DOCKERBUILD); \
 	echo "Running basic test in $(IMAGEREPO):latest: inspec exec default/ -t k8s://"; \
-	$(INSPECRUN_BASIC); \
+	$(INSPECRUN_BASIC) > output.log; \
+	if [ "$$?" -ne "0" ]; then cat output.log; exit 1;fi; \
 	echo "Running kong api test in $(IMAGEREPO):latest: inspec exec kong/"; \
-	$(INSPECRUN_KONG); \
+	$(INSPECRUN_KONG) >> output.log; \
+	if [ "$$?" -ne "0" ]; then cat output.log; exit 1;fi; \
+	cat output.log; \
 	popd

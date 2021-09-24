@@ -6,3 +6,5 @@ copyright_email: stephen.brown@konghq.com
 license: MIT
 summary: Test Kong Gateway API's
 version: 0.1.0
+supports:
+  - platform-family: linux

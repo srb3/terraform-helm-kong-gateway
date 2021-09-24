@@ -42,4 +42,5 @@ test/fixtures/*/terraform.tfstate*
 test/fixtures/*/terraform.tfstate.d/*
 test/integration/attributes/*/attrs.yml
 test-result-*
-test/default/attributes.yaml
+test/attributes.yaml
+test/output.log
