@@ -6,7 +6,7 @@ IMAGEREPO=srb3/$(IMAGENAME)
 WORKDIR=/share
 
 DOCKERBUILD=docker build -t $(IMAGEREPO):latest .
-DOCKER_COMMAND=docker run --rm -it -v `pwd`:$(WORKDIR) -v $(HOME)/.kube:/root/.kube:ro -v $(HOME)/.minikube:$(HOME)/.minikube
+DOCKER_COMMAND=docker run --rm -t -v `pwd`:$(WORKDIR) -v $(HOME)/.kube:/root/.kube:ro -v $(HOME)/.minikube:$(HOME)/.minikube
 
 IMAGEPATH=$(IMAGEREPO):latest
 INSPECRUN_BASIC=$(DOCKER_COMMAND) $(IMAGEPATH) exec default/ -t k8s://
