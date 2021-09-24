@@ -24,7 +24,7 @@ control 'k8s-1.1' do
 
       describe "#{namespace.name}/#{pod.name} pod" do
         subject { k8sobject(api: 'v1', type: 'pods', namespace: namespace.name, name: pod.name) }
-        it { should_not be_running }
+        it { should be_running }
       end
     end
   end

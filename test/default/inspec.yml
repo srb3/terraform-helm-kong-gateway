@@ -7,7 +7,7 @@ license: MIT
 summary: Test Kong resources in K8s
 version: 0.1.0
 supports:
-  platform: k8s
+  - platform: k8s
 depends:
   - name: inspec-k8s
     url: https://github.com/bgeesaman/inspec-k8s/archive/0.1.2.tar.gz
