@@ -24,7 +24,7 @@ resource "helm_release" "kong" {
   namespace = var.namespace
   values    = [var.values]
   provisioner "local-exec" {
-    command = "sleep 40"
+    command = "sleep 40" # TODO: this may not be needed
   }
   depends_on = [module.secrets]
 }

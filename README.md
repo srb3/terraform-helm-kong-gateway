@@ -191,6 +191,16 @@ module "kong_dp" {
 
 Complete examples are kept in the [examples](./examples) directory
 
+###### Miscellaneous
+
+Example of kong_admin_gui_session_conf:
+
+```HCL
+locals {
+  kong_admin_gui_session_conf   = "{\"cookie_name\":\"admin_session\",\"storage\":\"kong\",\"cookie_samesite\":\"off\",\"cookie_secure\":false,\"secret\":\"cookiesecret\"}"
+}
+```
+
 ## Testing
 
 Test for this module are written in Inspec. All
