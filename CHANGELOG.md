@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.0.6
+
+🔧 Fixes:
+
+- Added examples of session configuration to README file
+
+- Noted areas for improvement
+
+([PR #6](https://github.com/srb3/terraform-helm-kong-gateway/pull/6))
+
+
+## 0.0.5
+
+🔧 Fixes:
+
+- Added some extra comments about the secrets module
+
+([PR #5](https://github.com/srb3/terraform-helm-kong-gateway/pull/5))
+
+
 ## 0.0.4
 
 🔧 Fixes:
