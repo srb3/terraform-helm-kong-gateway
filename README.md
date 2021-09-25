@@ -96,7 +96,7 @@ locals {
       # The name for the clustering certificate in the Kong helm values file
       # see https://github.com/Kong/charts/tree/master/charts/kong#hybrid-mode
       yaml_crt = "cluster_cert"
-      # The name for the clustering certificate pricate key in the Kong helm
+      # The name for the clustering certificate private key in the Kong helm
       # values file see https://github.com/Kong/charts/tree/master/charts/kong#hybrid-mode
       yaml_key = "cluster_cert_key"
     }
