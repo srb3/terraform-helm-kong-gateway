@@ -1,3 +1,4 @@
+# These values will be created as kubernetes secrets
 module "secrets" {
   source                      = "./modules/secrets"
   deployment_name             = var.chart.name
