@@ -154,7 +154,7 @@ locals {
   ), "")
 
   manager_ip_tmp = local.manager_lb != "" ? local.manager_lb : try(
-  data.kubernetes_service.manager.spec.0.manager_ip, "")
+  data.kubernetes_service.manager.spec.0.cluster_ip, "")
 
   manager_ingress = try(
     data.kubernetes_ingress.manager.status.0.load_balancer.0.ingress.0.ip,
@@ -172,7 +172,7 @@ locals {
   ), "")
 
   admin_ip_tmp = local.admin_lb != "" ? local.admin_lb : try(
-  data.kubernetes_service.admin.spec.0.admin_ip, "")
+  data.kubernetes_service.admin.spec.0.cluster_ip, "")
 
   admin_ingress = try(
     data.kubernetes_ingress.admin.status.0.load_balancer.0.ingress.0.ip,
