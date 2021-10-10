@@ -148,10 +148,14 @@ data "kubernetes_ingress" "proxy" {
 # create some local variables to use for outputs
 locals {
   ######### manager ##############################
-  manager_ip_tmp = try(try(
-    data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.manager.spec.0.cluster_ip
+  manager_lb = try(try(
+    data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  manager_ip_tmp = local.manager_lb != "" ? local.manager_lb : try(
+  data.kubernetes_service.manager.spec.0.cluster_ip, "")
+
   manager_ingress = try(
     data.kubernetes_ingress.manager.status.0.load_balancer.0.ingress.0.ip,
     ""
@@ -162,10 +166,14 @@ locals {
   manager_internal_endpoint = "${local.manager_internal_dns}:${local.manager_port}"
 
   ######### admin ################################
-  admin_ip_tmp = try(try(
-    data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.admin.spec.0.cluster_ip
+  admin_lb = try(try(
+    data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  admin_ip_tmp = local.admin_lb != "" ? local.admin_lb : try(
+  data.kubernetes_service.admin.spec.0.cluster_ip, "")
+
   admin_ingress = try(
     data.kubernetes_ingress.admin.status.0.load_balancer.0.ingress.0.ip,
     ""
@@ -177,10 +185,14 @@ locals {
   admin_internal_endpoint = "${local.admin_interanl_dns}:${local.admin_port}"
 
   ######### cluster ##############################
-  cluster_ip_tmp = try(try(
-    data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.cluster.spec.0.cluster_ip
+  cluster_lb = try(try(
+    data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  cluster_ip_tmp = local.cluster_lb != "" ? local.cluster_lb : try(
+  data.kubernetes_service.cluster.spec.0.cluster_ip, "")
+
   cluster_ingress = try(
     data.kubernetes_ingress.cluster.status.0.load_balancer.0.ingress.0.ip,
     ""
@@ -191,10 +203,14 @@ locals {
   cluster_internal_endpoint = "${local.cluster_internal_dns}:${local.cluster_port}"
 
   ######### clustertelemetry #####################
-  clustertelemetry_ip_tmp = try(try(
-    data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.clustertelemetry.spec.0.cluster_ip
+  clustertelemetry_lb = try(try(
+    data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  clustertelemetry_ip_tmp = local.clustertelemetry_lb != "" ? local.clustertelemetry_lb : try(
+  data.kubernetes_service.clustertelemetry.spec.0.cluster_ip, "")
+
   clustertelemetry_ingress = try(
     data.kubernetes_ingress.clustertelemetry.status.0.load_balancer.0.ingress.0.ip,
     ""
@@ -206,10 +222,14 @@ locals {
 
 
   ######### portal ###############################
-  portal_ip_tmp = try(try(
-    data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.portal.spec.0.cluster_ip
+  portal_lb = try(try(
+    data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  portal_ip_tmp = local.portal_lb != "" ? local.portal_lb : try(
+  data.kubernetes_service.portal.spec.0.cluster_ip, "")
+
   portal_ingress = try(
     data.kubernetes_ingress.portal.status.0.load_balancer.0.ingress.0.ip,
     ""
@@ -222,10 +242,14 @@ locals {
 
 
   ######### portalapi ############################
-  portalapi_ip_tmp = try(try(
-    data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.portalapi.spec.0.cluster_ip
+  portalapi_lb = try(try(
+    data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  portalapi_ip_tmp = local.portalapi_lb != "" ? local.portalapi_lb : try(
+  data.kubernetes_service.portalapi.spec.0.cluster_ip, "")
+
   portalapi_ingress = try(
     data.kubernetes_ingress.portalapi.status.0.load_balancer.0.ingress.0.ip,
     ""
@@ -237,10 +261,14 @@ locals {
   portalapi_internal_endpoint = "${local.portalapi_interanl_dns}:${local.portalapi_port}"
 
   ######### proxy ################################
-  proxy_ip_tmp = try(try(
-    data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.ip,
-    data.kubernetes_service.proxy.spec.0.cluster_ip
+  proxy_lb = try(try(
+    data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.ip
   ), "")
+
+  proxy_ip_tmp = local.proxy_lb != "" ? local.proxy_lb : try(
+  data.kubernetes_service.proxy.spec.0.cluster_ip, "")
+
   proxy_ingress = try(
     data.kubernetes_ingress.proxy.status.0.load_balancer.0.ingress.0.ip,
     ""
