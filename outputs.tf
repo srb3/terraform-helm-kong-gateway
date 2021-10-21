@@ -81,3 +81,19 @@ output "clustertelemetry_port" {
 output "clustertelemetry_internal_endpoint" {
   value = local.clustertelemetry_internal_endpoint
 }
+
+output "postgresql_ip" {
+  value = local.postgresql_ip
+}
+
+output "postgresql_port" {
+  value = local.postgresql_port
+}
+
+output "postgresql_internal_endpoint" {
+  value = local.postgresql_internal_endpoint
+}
+
+output "postgresql_internal_dns" {
+  value = local.postgresql_internal_dns
+}

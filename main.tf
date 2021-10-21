@@ -87,6 +87,14 @@ data "kubernetes_service" "proxy" {
   depends_on = [helm_release.kong]
 }
 
+data "kubernetes_service" "postgresql" {
+  metadata {
+    name      = "${var.chart.name}-postgresql"
+    namespace = var.namespace
+  }
+  depends_on = [helm_release.kong]
+}
+
 # query any ingress endpoints helm created for kong
 # so we can use them as module outputs
 data "kubernetes_ingress" "manager" {
@@ -140,6 +148,14 @@ data "kubernetes_ingress" "portalapi" {
 data "kubernetes_ingress" "proxy" {
   metadata {
     name      = "${var.chart.name}-kong-proxy"
+    namespace = var.namespace
+  }
+  depends_on = [helm_release.kong]
+}
+
+data "kubernetes_ingress" "postgresql" {
+  metadata {
+    name      = "${var.chart.name}-postgresql"
     namespace = var.namespace
   }
   depends_on = [helm_release.kong]
@@ -277,4 +293,22 @@ locals {
   proxy_port              = try(data.kubernetes_service.proxy.spec.0.port.0.port, "")
   proxy_internal_dns      = try("${data.kubernetes_service.proxy.metadata.0.name}.${var.namespace}.svc.cluster.local", "")
   proxy_internal_endpoint = "${local.proxy_internal_dns}:${local.proxy_port}"
+
+  ######### postgresql ###########################
+  postgresql_lb = try(try(
+    data.kubernetes_service.postgresql.status.0.load_balancer.0.ingress.0.hostname,
+    data.kubernetes_service.postgresql.status.0.load_balancer.0.ingress.0.ip
+  ), "")
+
+  postgresql_ip_tmp = local.postgresql_lb != "" ? local.postgresql_lb : try(
+  data.kubernetes_service.postgresql.spec.0.cluster_ip, "")
+
+  postgresql_ingress = try(
+    data.kubernetes_ingress.postgresql.status.0.load_balancer.0.ingress.0.ip,
+    ""
+  )
+  postgresql_ip                = local.postgresql_ingress != "" ? local.postgresql_ingress : local.postgresql_ip_tmp
+  postgresql_port              = try(data.kubernetes_service.postgresql.spec.0.port.0.port, "")
+  postgresql_internal_dns      = try("${data.kubernetes_service.postgresql.metadata.0.name}.${var.namespace}.svc.cluster.local", "")
+  postgresql_internal_endpoint = "${local.postgresql_internal_dns}:${local.postgresql_port}"
 }
