@@ -14,7 +14,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.14.8
+          terraform_version: 1.0.10
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Minikube
