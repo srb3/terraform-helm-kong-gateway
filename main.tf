@@ -164,10 +164,9 @@ data "kubernetes_ingress" "postgresql" {
 # create some local variables to use for outputs
 locals {
   ######### manager ##############################
-  manager_lb = try(try(
-    data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  manager_lb_1 = try(data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.hostname, "")
+  manager_lb_2 = try(data.kubernetes_service.manager.status.0.load_balancer.0.ingress.0.ip, "")
+  manager_lb   = local.manager_lb_1 != "" ? local.manager_lb_1 : local.manager_lb_2
 
   manager_ip_tmp = local.manager_lb != "" ? local.manager_lb : try(
   data.kubernetes_service.manager.spec.0.cluster_ip, "")
@@ -182,10 +181,9 @@ locals {
   manager_internal_endpoint = "${local.manager_internal_dns}:${local.manager_port}"
 
   ######### admin ################################
-  admin_lb = try(try(
-    data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  admin_lb_1 = try(data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.hostname, "")
+  admin_lb_2 = try(data.kubernetes_service.admin.status.0.load_balancer.0.ingress.0.ip, "")
+  admin_lb   = local.admin_lb_1 != "" ? local.admin_lb_1 : local.admin_lb_2
 
   admin_ip_tmp = local.admin_lb != "" ? local.admin_lb : try(
   data.kubernetes_service.admin.spec.0.cluster_ip, "")
@@ -201,10 +199,10 @@ locals {
   admin_internal_endpoint = "${local.admin_interanl_dns}:${local.admin_port}"
 
   ######### cluster ##############################
-  cluster_lb = try(try(
-    data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  cluster_lb_1 = try(data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.hostname, "")
+  cluster_lb_2 = try(data.kubernetes_service.cluster.status.0.load_balancer.0.ingress.0.ip, "")
+  cluster_lb   = local.cluster_lb_1 != "" ? local.cluster_lb_1 : local.cluster_lb_2
+
 
   cluster_ip_tmp = local.cluster_lb != "" ? local.cluster_lb : try(
   data.kubernetes_service.cluster.spec.0.cluster_ip, "")
@@ -219,10 +217,10 @@ locals {
   cluster_internal_endpoint = "${local.cluster_internal_dns}:${local.cluster_port}"
 
   ######### clustertelemetry #####################
-  clustertelemetry_lb = try(try(
-    data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+
+  clustertelemetry_lb_1 = try(data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.hostname, "")
+  clustertelemetry_lb_2 = try(data.kubernetes_service.clustertelemetry.status.0.load_balancer.0.ingress.0.ip, "")
+  clustertelemetry_lb   = local.clustertelemetry_lb_1 != "" ? local.clustertelemetry_lb_1 : local.clustertelemetry_lb_2
 
   clustertelemetry_ip_tmp = local.clustertelemetry_lb != "" ? local.clustertelemetry_lb : try(
   data.kubernetes_service.clustertelemetry.spec.0.cluster_ip, "")
@@ -238,10 +236,9 @@ locals {
 
 
   ######### portal ###############################
-  portal_lb = try(try(
-    data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  portal_lb_1 = try(data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.hostname, "")
+  portal_lb_2 = try(data.kubernetes_service.portal.status.0.load_balancer.0.ingress.0.ip, "")
+  portal_lb   = local.portal_lb_1 != "" ? local.portal_lb_1 : local.portal_lb_2
 
   portal_ip_tmp = local.portal_lb != "" ? local.portal_lb : try(
   data.kubernetes_service.portal.spec.0.cluster_ip, "")
@@ -258,10 +255,9 @@ locals {
 
 
   ######### portalapi ############################
-  portalapi_lb = try(try(
-    data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  portalapi_lb_1 = try(data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.hostname, "")
+  portalapi_lb_2 = try(data.kubernetes_service.portalapi.status.0.load_balancer.0.ingress.0.ip, "")
+  portalapi_lb   = local.portalapi_lb_1 != "" ? local.portalapi_lb_1 : local.portalapi_lb_2
 
   portalapi_ip_tmp = local.portalapi_lb != "" ? local.portalapi_lb : try(
   data.kubernetes_service.portalapi.spec.0.cluster_ip, "")
@@ -277,10 +273,10 @@ locals {
   portalapi_internal_endpoint = "${local.portalapi_interanl_dns}:${local.portalapi_port}"
 
   ######### proxy ################################
-  proxy_lb = try(try(
-    data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  proxy_lb_1 = try(data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.hostname, "")
+  proxy_lb_2 = try(data.kubernetes_service.proxy.status.0.load_balancer.0.ingress.0.ip, "")
+  proxy_lb   = local.proxy_lb_1 != "" ? local.proxy_lb_1 : local.proxy_lb_2
+
 
   proxy_ip_tmp = local.proxy_lb != "" ? local.proxy_lb : try(
   data.kubernetes_service.proxy.spec.0.cluster_ip, "")
@@ -295,10 +291,9 @@ locals {
   proxy_internal_endpoint = "${local.proxy_internal_dns}:${local.proxy_port}"
 
   ######### postgresql ###########################
-  postgresql_lb = try(try(
-    data.kubernetes_service.postgresql.status.0.load_balancer.0.ingress.0.hostname,
-    data.kubernetes_service.postgresql.status.0.load_balancer.0.ingress.0.ip
-  ), "")
+  postgresql_lb_1 = try(data.kubernetes_service.postgresql.status.0.load_balancer.0.ingress.0.hostname, "")
+  postgresql_lb_2 = try(data.kubernetes_service.postgresql.status.0.load_balancer.0.ingress.0.ip, "")
+  postgresql_lb   = local.postgresql_lb_1 != "" ? local.postgresql_lb_1 : local.postgresql_lb_2
 
   postgresql_ip_tmp = local.postgresql_lb != "" ? local.postgresql_lb : try(
   data.kubernetes_service.postgresql.spec.0.cluster_ip, "")
