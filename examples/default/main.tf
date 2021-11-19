@@ -179,3 +179,11 @@ resource "local_file" "attrs_create" {
   filename        = "${path.module}/../../test/attributes.yaml"
   file_permission = "0644"
 }
+
+output "admin_ip" {
+  value = module.kong_cp.admin_ip
+}
+
+output "proxy_ip" {
+  value = module.kong_dp.proxy_ip
+}
