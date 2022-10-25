@@ -17,7 +17,8 @@ INSPECRUN_KONG=$(DOCKER_COMMAND) $(IMAGEPATH) exec kong/ --input-file /$(WORKDIR
 
 # --reporter=json:$(WORKDIR)/output.json
 
-all: build test clean
+# all: build test clean
+all: build clean
 
 build: build_deployment_default
 test: test_deployment_default
