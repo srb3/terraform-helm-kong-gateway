@@ -120,10 +120,16 @@ variable "kong_database_secret_name" {
   default     = "postgresql"
 }
 
-variable "kong_database_secret_key" {
-  description = "A string used as the key of the database password kubernetes secret"
+variable "kong_database_admin_secret_key" {
+  description = "A string used as the key of the database admin password kubernetes secret"
   type        = string
-  default     = "postgresql-password"
+  default     = "postgres-password"
+}
+
+variable "kong_database_user_secret_key" {
+  description = "A string used as the key of the database user password kubernetes secret"
+  type        = string
+  default     = "password"
 }
 
 ########### Control ##############################
